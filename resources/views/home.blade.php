@@ -17,14 +17,14 @@
     
 
     <div style="margin-top:-30px;">
-          <button type="button" class="btn btn-info" data-toggle="modal" data-target="#import_batch">
+          <button type="button" class="btn btn-success" data-toggle="modal" data-target="#import_batch">
                       Import Batch Item
                     </button>
-          <a href="/items" class="btn btn-info">Items</a>
-         {{--  <button type="button" class="btn btn-info" data-toggle="modal" data-target="#export_batch">
+          <a href="/items" class="btn btn-success">Items</a>
+         {{--  <button type="button" class="btn btn-success" data-toggle="modal" data-target="#export_batch">
                       Export Batch Item
                     </button> --}}
-        <a href="/transaction" class="btn btn-info">View Item Transactions</a>
+        <a href="/transaction" class="btn btn-success">View Item Transactions</a>
     </div>
   <!-- Button to Open the Modal -->
 

@@ -73,7 +73,7 @@
                 </div>
             </div>
         </nav>
- <img src="{{asset('img/5h.png')}}" width="100%">
+ <img src="{{asset('img/hedric.jpg')}}" width="100%">
         <main class="py-3">
 
 
