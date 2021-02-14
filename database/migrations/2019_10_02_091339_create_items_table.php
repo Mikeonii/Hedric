@@ -17,7 +17,7 @@ class CreateItemsTable extends Migration
             $table->bigIncrements('id');
             $table->string('name');
             $table->integer('stock');
-            $table->string('from');
+            $table->integer('supplier_id');
             $table->string('unit');
             $table->string('posted_by');
             $table->timestamps();

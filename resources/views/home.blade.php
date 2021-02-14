@@ -17,31 +17,32 @@
     
 
     <div style="margin-top:-30px;">
-          <button type="button" class="btn btn-success" data-toggle="modal" data-target="#import_batch">
-                      Import Batch Item
+          <button type="button" class="btn btn-success" data-toggle="modal" data-target="#import_new_item">
+                      Import New Item
+                    </button>
+          <button type="button" class="btn btn-success" data-toggle="modal" data-target="#add_new_supplier">
+                      Add New Supplier
                     </button>
           <a href="/items" class="btn btn-success">Items</a>
-         {{--  <button type="button" class="btn btn-success" data-toggle="modal" data-target="#export_batch">
-                      Export Batch Item
-                    </button> --}}
         <a href="/transaction" class="btn btn-success">View Item Transactions</a>
     </div>
   <!-- Button to Open the Modal -->
 
 {{-- modal import batch item --}}
-<div class="modal fade" id="import_batch">
+<div class="modal fade" id="import_new_item">
   <div class="modal-dialog">
     <div class="modal-content">
 
       <!-- Modal Header -->
       <div class="modal-header">
-        <h4 class="modal-title">Import Batch Item</h4>
+        <h4 class="modal-title">Import New Item</h4>
         <button type="button" class="close" data-dismiss="modal">&times;</button>
       </div>
 
       <!-- Modal body -->
       <div class="modal-body form-group">
     
+        
           {!!Form::open(['action'=>'itemsController@store', 'method'=>'POST','id'=>'import_batch_form'])!!}
             {{Form::label('title','Product Name')}}
             {{Form::text('product_name','',['autofocus'=>'true','class'=>'form-control'])}}
@@ -53,8 +54,9 @@
             {{Form::text('unit','',['class'=>'form-control'])}}
             {{Form::text('action','Batch Import',['hidden'])}}
             {{Form::label('title','From')}}
-            {{Form::text('from','',['class'=>'form-control'])}}
+            {{Form::select('supplier',$suppliers,null,['class'=>'form-control'])}}
             <hr>
+            {!! Form::checkbox($name, $value, $checked, []) !!}
             {{Form::submit('Import Item',['class'=>'btn btn-primary'])}}
           {!!Form::close()!!}
         
@@ -66,25 +68,29 @@
     </div>
   </div>
 
-  {{-- modal export batch item --}}
-{{-- <div class="modal fade" id="export_batch">
+  {{-- modal add new supplier --}}
+  <div class="modal fade" id="add_new_supplier">
   <div class="modal-dialog">
     <div class="modal-content">
 
       <!-- Modal Header -->
       <div class="modal-header">
-        <h4 class="modal-title">Export Batch Item</h4>
+        <h4 class="modal-title">Add New Supplier</h4>
         <button type="button" class="close" data-dismiss="modal">&times;</button>
       </div>
 
       <!-- Modal body -->
       <div class="modal-body">
-          {!!Form::open(['action'=>'itemsController@import', 'method'=>'POST','id'=>'form_import'])!!}
-            {{Form::label('title','Stock')}}
-            {{Form::number('import_number','',['autofocus'=>'true'])}}
-            {{Form::number('item_id','',['hidden'=>'true','id'=>'item_id'])}}
-            {{Form::text('action','Import',['hidden'])}}
-            {{Form::submit('Import',['class'=>'btn btn-primary'])}}
+       @csrf
+       <!--   <input type="hidden" name="_token" value="{{ csrf_token() }}">
+        <form method="post" action = "/add_supplier">
+          <input type="text" name="name" placeholder="Add Name">
+          <input type="submit" name="submit" label="Add">
+        </form> -->
+          {!!Form::open(['action'=>'SupplierController@store', 'method'=>'POST','id'=>'add_supplier'])!!}
+            {{Form::label('title','Supplier Name')}}
+            {{Form::text('name','',['autofocus'=>'true'])}}
+            {{Form::submit('Add',['class'=>'btn btn-primary'])}}
           {!!Form::close()!!}
       </div>
       </div>
@@ -92,7 +98,7 @@
     
 
     </div>
-  </div> --}}
+  </div> 
 
 {{-- modal import --}}
 <div class="modal fade" id="import">
@@ -181,7 +187,8 @@
             {{Form::number('item_id','',['hidden'=>'true','id'=>'items_id'])}}
             {{Form::text('action','Export',['hidden'])}}
             {{Form::label('title','To')}}
-            {{Form::text('to','')}}
+           
+          
             {{Form::text('unit','',['id'=>'items_unit_export','hidden'])}}
             {{Form::submit('Export',['class'=>'btn btn-warning'])}}
           {!!Form::close()!!}
@@ -271,41 +278,6 @@
              @else
                 <h3>No items found</h3>
         @endif
-              <h3>Batch Item Transactions History Table</h3>
-            @if(count($batchTrans) > 0)
-        
-            <table id="transactions" class="table-hover table table-striped">
-                <thead>
-                    <tr>
-                        <th>Action</th>
-                        <th>Product Name</th>
-                        
-                        <th>Quantity</th>
-                        <th>Unit</th>
-                        <th>Performed By</th>
-                        <th>Performed Date</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach($batchTrans as $batch)
-                        <tr>
-                            <td>{{$batch->action}}</td>
-                            <td>{{$batch->product_name}}</td>
-                            
-                            <td>{{$batch->stock}}</td>
-                            <td>{{$batch->unit}}</td>
-                            <td>{{$batch->performed_by}}</td>
-                            <td>{{$batch->created_at}}</td>
-                            
-                        </tr>
-                        
-                    @endforeach
-                </tbody>
-            </table>
-        
-        @else
-                <h3>No items found</h3>
-        @endif
         
         </div>
     </div>
@@ -342,6 +314,18 @@
             $('#items_unit').val(unit);
             $('#items_unit_export').val(unit);
           });
+          // add supplier
+          $('#add_supplier').submit(function(e){
+            e.preventDefault();
+            // send to ajax
+            $.ajax({
+              type:'post',
+              url:'{{URL::to('add_supplier')}}',
+              data: $(this).serialize(),success:function(data){
+                alert(data);
+              }
+            })
+          })
           //submit form import
          $('#form_import').submit(function(e){
          e.preventDefault();

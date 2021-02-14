@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Item;
 use App\Transaction;
 use DB;
+use App\Supplier;
 
 class HomeController extends Controller
 {
@@ -30,17 +31,18 @@ class HomeController extends Controller
         $items = Item::all();
         $transaction = DB::table('transactions')
         ->select('transactions.*','items.name')
-        ->join('items','transactions.product_id','=','items.id')
+        ->join('items','transactions.item_id','=','items.id')
         ->orderBy('transactions.id','DESC')
         ->skip(0)
         ->take(5)
         ->get();
-        $batchTrans = DB::table('batch_transactions')
-        ->select('*')
-        ->orderBy('id','DESC')
-        ->skip(0)
-        ->take(5)
-        ->get();
-        return view('home')->with('title',$title)->with('items',$items)->with('transaction',$transaction)->with('batchTrans',$batchTrans);
+        $suppliers = Supplier::pluck('supplier_name');
+        // $batchTrans = DB::table('batch_transactions')
+        // ->select('*')
+        // ->orderBy('id','DESC')
+        // ->skip(0)
+        // ->take(5)
+        // ->get();
+        return view('home')->with('title',$title)->with('items',$items)->with('transaction',$transaction)->with('suppliers',$suppliers);
     }
 }

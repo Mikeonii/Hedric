@@ -82,6 +82,6 @@
     </div>
 </body>
 <footer class="bg-dark" style="padding:20px; text-align: center; font-size:px;">
-<small class="text-secondary" style="margin-top:-50px;">janmichaelbesinga873@gmail.com</small>
+<small class="text-secondary" style="margin-top:-50px;">powered by: janmichaelbesinga873@gmail.com</small>
 </footer>
 </html>

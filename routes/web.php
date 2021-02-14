@@ -23,7 +23,8 @@ Route::post('export','itemsController@export');
 Route::post('addTrans','TransactionsController@store');
 Route::post('storeBatch','BatchTransactionsController@store');
 Route::post('store','itemsController@store');
-
+// add new supplier
+Route::post('add_supplier','SupplierController@store');
 
 Auth::routes();
 
