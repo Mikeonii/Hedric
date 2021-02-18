@@ -56,7 +56,7 @@
             {{Form::label('title','From')}}
             {{Form::select('supplier',$suppliers,null,['class'=>'form-control'])}}
             <hr>
-            {!! Form::checkbox($name, $value, $checked, []) !!}
+       
             {{Form::submit('Import Item',['class'=>'btn btn-primary'])}}
           {!!Form::close()!!}
         
