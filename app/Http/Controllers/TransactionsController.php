@@ -3,10 +3,11 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Item;
 use App\Transaction;
 use DB;
-use App\Item;
-use App\BatchTransaction;
+use Exception;
+
 class TransactionsController extends Controller
 {
     /**
@@ -44,17 +45,12 @@ class TransactionsController extends Controller
      */
     public function store(Request $request)
     {   
-       
-        $trans = new Transaction;
-        $trans->unit = $request->unit;
-        $trans->product_id = $request->item_id;
-        $trans->action =$request->action;;
-        $trans->performed_by = auth()->user()->name;
-        $trans->quantity = $request->import_number;
-        $trans->to = strtoupper($request->to);
-        $trans->save();
 
-        return('success');
+        // receiving from an object request through ajax
+
+      
+      
+
     }
 
     /**

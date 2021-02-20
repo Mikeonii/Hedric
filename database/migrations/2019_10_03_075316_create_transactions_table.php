@@ -19,7 +19,6 @@ class CreateTransactionsTable extends Migration
             $table->String('action');
             $table->String('performed_by');
             $table->Integer('quantity');
-            $table->string('to');
             $table->string('unit');
             $table->timestamps();
         });

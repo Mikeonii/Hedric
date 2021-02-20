@@ -19,7 +19,7 @@
 <!-- Latest compiled JavaScript -->
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 
-
+<link rel="stylesheet" href="//cdn.materialdesignicons.com/5.4.55/css/materialdesignicons.min.css">
 </head>
 <body class="">
     <div id="app">
@@ -81,7 +81,7 @@
         </main>
     </div>
 </body>
-<footer class="bg-dark" style="padding:20px; text-align: center; font-size:px;">
-<small class="text-secondary" style="margin-top:-50px;">powered by: janmichaelbesinga873@gmail.com</small>
+<footer class="bg-dark" style="padding:20px; text-align: center; font-size:px; margin-top:px">
+<span class="text-secondary" style="margin-top:px;">powered by: <i class="mdi mdi-gmail" ></i> janmichaelbesinga873@gmail.com |<code style="color:"> version 1.2 2021</code></span> 
 </footer>
 </html>

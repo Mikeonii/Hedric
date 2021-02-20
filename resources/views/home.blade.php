@@ -1,9 +1,9 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="" style="">
-    <div class="row justify-content-center">
-        <div class="col-16">
+<div class="" style="margin-top: -30px;">
+    <div class="">
+        <div class="">
             <div class="">
                 <div class="card-header">Dashboard</div>
 
@@ -18,75 +18,61 @@
 
     <div style="margin-top:-30px;">
           <button type="button" class="btn btn-success" data-toggle="modal" data-target="#import_new_item">
+            <i class="mdi mdi-plus" style="margin-right:5px"></i>
                       Import New Item
                     </button>
           <button type="button" class="btn btn-success" data-toggle="modal" data-target="#add_new_supplier">
+            <i class="mdi mdi-account-plus" style="margin-right:5px"></i>
                       Add New Supplier
                     </button>
-          <a href="/items" class="btn btn-success">Items</a>
-        <a href="/transaction" class="btn btn-success">View Item Transactions</a>
+          <a href="/items" class="btn btn-success">
+            <i class="mdi mdi-file-table-box-multiple-outline" style="margin-right:5px"></i>Items</a>
+        {{-- <a href="/transaction" class="btn btn-success">View Item Transactions</a> --}}
     </div>
   <!-- Button to Open the Modal -->
 
-{{-- modal import batch item --}}
+{{-- ADD NEW ITEM MODAL --}}
 <div class="modal fade" id="import_new_item">
   <div class="modal-dialog">
     <div class="modal-content">
-
       <!-- Modal Header -->
       <div class="modal-header">
         <h4 class="modal-title">Import New Item</h4>
         <button type="button" class="close" data-dismiss="modal">&times;</button>
       </div>
-
       <!-- Modal body -->
       <div class="modal-body form-group">
-    
-        
-          {!!Form::open(['action'=>'itemsController@store', 'method'=>'POST','id'=>'import_batch_form'])!!}
+          {!!Form::open(['action'=>'itemsController@store', 'method'=>'POST','id'=>'add_new_item'])!!}
             {{Form::label('title','Product Name')}}
             {{Form::text('product_name','',['autofocus'=>'true','class'=>'form-control'])}}
-     
             {{Form::label('title','Stock')}}
             {{Form::number('stock','',['class'=>'form-control'])}}
-     
             {{Form::label('title','Unit')}}
             {{Form::text('unit','',['class'=>'form-control'])}}
             {{Form::text('action','Batch Import',['hidden'])}}
             {{Form::label('title','From')}}
             {{Form::select('supplier',$suppliers,null,['class'=>'form-control'])}}
             <hr>
-       
             {{Form::submit('Import Item',['class'=>'btn btn-primary'])}}
           {!!Form::close()!!}
         
       </div>
       </div>
-
-    
-
     </div>
   </div>
 
-  {{-- modal add new supplier --}}
+  {{-- SUPPLIER MODAL --}}
   <div class="modal fade" id="add_new_supplier">
   <div class="modal-dialog">
     <div class="modal-content">
 
-      <!-- Modal Header -->
+      <!-- SUPPLIER MODAL Header -->
       <div class="modal-header">
         <h4 class="modal-title">Add New Supplier</h4>
         <button type="button" class="close" data-dismiss="modal">&times;</button>
       </div>
-
-      <!-- Modal body -->
+      <!-- SUPPLIER Modal body -->
       <div class="modal-body">
-       @csrf
-       <!--   <input type="hidden" name="_token" value="{{ csrf_token() }}">
-        <form method="post" action = "/add_supplier">
-          <input type="text" name="name" placeholder="Add Name">
-          <input type="submit" name="submit" label="Add">
-        </form> -->
           {!!Form::open(['action'=>'SupplierController@store', 'method'=>'POST','id'=>'add_supplier'])!!}
             {{Form::label('title','Supplier Name')}}
             {{Form::text('name','',['autofocus'=>'true'])}}
@@ -94,20 +80,17 @@
           {!!Form::close()!!}
       </div>
       </div>
-
-    
-
     </div>
   </div> 
 
-{{-- modal import --}}
+{{-- ADD STOCKS MODAL --}}
 <div class="modal fade" id="import">
   <div class="modal-dialog">
     <div class="modal-content">
 
       <!-- Modal Header -->
       <div class="modal-header">
-        <h4 class="modal-title">Import</h4>
+        <h4 class="modal-title">Add Stocks</h4>
         <button type="button" class="close" data-dismiss="modal">&times;</button>
       </div>
 
@@ -131,14 +114,13 @@
               </tr>
             </tbody>
           </table>
-
-          {!!Form::open(['action'=>'itemsController@import', 'method'=>'POST','id'=>'form_import'])!!}
+          {{-- ADD STOCKS FORM --}}
+          {!!Form::open(['action'=>'itemsController@add_stocks', 'method'=>'POST','id'=>'add_stocks_form'])!!}
             {{Form::label('title','Stock')}}
             {{Form::number('import_number','',['autofocus'=>'true'])}}
             {{Form::number('item_id','',['hidden'=>'true','id'=>'item_id'])}}
-            {{Form::text('action','Import',['hidden'])}}
-            {{Form::text('unit','',['id'=>'items_unit','hidden'])}}
-            {{Form::submit('Import',['class'=>'btn btn-primary'])}}
+            {{Form::text('action','Add Stock',['hidden'])}}
+            {{Form::submit('Add',['class'=>'btn btn-primary'])}}
           {!!Form::close()!!}
         
       </div>
@@ -149,7 +131,7 @@
     </div>
   </div>
 
-{{-- modal export --}}
+{{-- EXPORT MODAL --}}
 <div class="modal fade" id="export">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -181,15 +163,10 @@
               </tr>
             </tbody>
           </table>
-        {!!Form::open(['action'=>'itemsController@export', 'method'=>'POST','id'=>'form_export'])!!}
+        {!!Form::open(['action'=>'itemsController@export', 'method'=>'POST','id'=>'export_stocks'])!!}
             {{Form::label('title','Stock')}}
-            {{Form::number('import_number','',['autofocus'=>'true'])}}
-            {{Form::number('item_id','',['hidden'=>'true','id'=>'items_id'])}}
-            {{Form::text('action','Export',['hidden'])}}
-            {{Form::label('title','To')}}
-           
-          
-            {{Form::text('unit','',['id'=>'items_unit_export','hidden'])}}
+            {{Form::number('export_number','',['autofocus'=>'true'])}}
+            {{Form::number('item_id','',['hidden'=>'true','id'=>'items_id'])}}        
             {{Form::submit('Export',['class'=>'btn btn-warning'])}}
           {!!Form::close()!!}
       </div>
@@ -199,7 +176,7 @@
 </div>
     <hr>
     <div class="row">
-       <div class="col-sm">
+       <div class="col-7">
        <h3>Items Data Table</h3>
         @if(count($items) > 0)
         
@@ -207,10 +184,12 @@
                 <thead>
                     <tr>
                         <th hidden>ID</th>
+
                         <th>Name</th>
                         <th>Stock</th>
                         <th>Unit</th>
                         <th>From</th>
+                        <th>Date Inserted</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -221,13 +200,14 @@
                             <td>{{$item->name}}</td>
                             <td>{{$item->stock}}</td>
                             <td>{{$item->unit}}</td>
-                            <td>{{$item->from}}</td>
-
+                            <td>{{$item->supplier->supplier_name}}</td>
+                            <td>{{$item->created_at}}</td>
                             <td>
-                  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#import">
-                      Import
+                  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#import"><i class="mdi mdi-application-import"></i>
+                      Add
                     </button>
                      <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#export">
+                      <i class="mdi mdi-application-export"></i>
                       Export
                     </button>
             
@@ -242,19 +222,17 @@
                 <h3>No items found</h3>
         @endif
         </div>
-        <div class="col-sm">
+        <div class="col">
             <h3>Transactions History Table</h3>
             @if(count($transaction) > 0)
         
-            <table id="transactions" class="table-hover table table-striped">
+            <table id="transactions_table" class="table-hover table table-striped">
                 <thead>
                     <tr>
                         <th>Action</th>
                         <th>Product Name</th>
-                        <th>To</th>
                         <th>Quantity</th>
                         <th>Unit</th>
-                        <th>Performed By</th>
                         <th>Performed Date</th>
                     </tr>
                 </thead>
@@ -263,11 +241,9 @@
                         <tr>
                            
                             <td>{{$trans->action}}</td>
-                            <td>{{$trans->name}}</td>
-                            <td>{{$trans->to}}</td>
+                            <td>{{$trans->item->name}}</td>
                             <td>{{$trans->quantity}}</td>
                             <td>{{$trans->unit}}</td>
-                            <td>{{$trans->performed_by}}</td>
                             <td>{{$trans->created_at}}</td>
                             
                         </tr>
@@ -288,8 +264,10 @@
 
     <script type="text/javascript">
         $(document).ready(function(){
+  
            // datatables
-           var table = $('#myTable').DataTable();
+           var table = $('#myTable').DataTable({"pageLength":5, "order": [[ 5, "desc" ]]});
+           var trans_table = $('#transactions_table').DataTable({"pageLength":3, "order": [[ 4, "desc" ]],});
           // buttons on click
           $('#myTable tbody').on('click','td',function(){
             var table_data = table.row(this).data();
@@ -312,7 +290,6 @@
             $('#export_unit').text(unit);
             $('#items_id').val(id);
             $('#items_unit').val(unit);
-            $('#items_unit_export').val(unit);
           });
           // add supplier
           $('#add_supplier').submit(function(e){
@@ -321,81 +298,58 @@
             $.ajax({
               type:'post',
               url:'{{URL::to('add_supplier')}}',
-              data: $(this).serialize(),success:function(data){
-                alert(data);
+              data: $(this).serialize(),success:function(response){
+                alert(response);
+                location.reload();
               }
             })
           })
-          //submit form import
-         $('#form_import').submit(function(e){
-         e.preventDefault();
-       
-         //send to import
-         $.ajax({
-          type: 'post',
-          url: '{{URL::to('import')}}',
-          data: $(this).serialize(),success:function(data){
 
-          },
-         });
-          //send to addTrans
-            $.ajax({
-                type: 'post',
-                url: '{{URL::to('addTrans')}}',
-                data: $(this).serialize(),success:function(data){
-                    window.alert(data);
-                    location.reload();
-                }
-            });
-         });
-
-           //submit form export
-         $('#form_export').submit(function(e){
-            console.log($(this).serialize());
-         e.preventDefault();
-       
-         //send to import
-         $.ajax({
-          type: 'post',
-          url: '{{URL::to('export')}}',
-          data: $(this).serialize(),success:function(data){
-            console.log('success');
-          },
-         });
-          //send to addTrans
-            $.ajax({
-                type: 'post',
-                url: '{{URL::to('addTrans')}}',
-                data: $(this).serialize(),success:function(data){
-                    window.alert(data);
-                    location.reload();
-                }
-            });
-         });
-         // import batch
-         $('#import_batch_form').submit(function(e){
+          // ADD NEW ITEM
+         $('#add_new_item').submit(function(e){
             e.preventDefault();
-            console.log($(this).serialize());
            // send to store
             $.ajax({
                 type:'post',
-                url: '{{URL::to('store')}}',
+                url: '{{URL::to('add_new_item')}}',
                 data: $(this).serialize(),
-                success: function(data){
-                    // window.alert(data);
-                    // location.reload();
-                }
-            });
-            // send to batch
-            $.ajax({
-                type: 'post',
-                url: '{{URL::to('storeBatch')}}',
-                data: $(this).serialize(),
-                success: function(data){
-                    window.alert(data);
+                success: function(response){
+                    alert(response);
                     location.reload();
                 }
             });
+         });
+
+          // ADD STOCKS FORM
+         $('#add_stocks_form').submit(function(e){
+         e.preventDefault();
+
+         //send to add_stocks
+         $.ajax({
+          type: 'post',
+          url: '{{URL::to('add_stocks')}}',
+          data: $(this).serialize(),success:function(data){
+            alert(data);
+            location.reload();
+            },
+         });
+          
+         });
+
+          // EXPORT STOCKS FORM
+         $('#export_stocks').submit(function(e){
+          // console.log($(this).serialize());
+         e.preventDefault();
+        
+           // send to export_stocks
+           $.ajax({
+            type: 'post',
+            url: '{{URL::to('export')}}',
+            data: $(this).serialize(),success:function(data){
+              alert(data);
+              location.reload();
+            },
+           });
          });
         });
     </script>

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Item;
 use App\Transaction;
 use DB;
+use Exception;
 class itemsController extends Controller
 {
     /**
@@ -85,69 +86,123 @@ class itemsController extends Controller
     }
 
     public function store(Request $request){
-        if($request->ajax()){
-        $product_name = strtoupper($request->product_name);
-        $stock = $request->stock;
-        $unit = strtoupper($request->unit);
-        $from = strtoupper($request->from);
+      
         $user = auth()->user()->name;
-
-        $item = new Item;
-        $item->name = $product_name;
-        $item->stock = $stock;
-        $item->from = $from;
-        $item->posted_by = $user;
-        $item->unit = $unit;
-        $item->save();
-        return('success');
-        }
-    }
-    public function import(Request $request){
-        if($request->ajax()){
-
-         $item_id = $request->item_id;
-         $quantity = $request->import_number;
-       
-         $items = Item::find($item_id);
-         //get current stock
-         $current = $items->stock;
-         //add current to request 
-         $new_stock = $quantity+$current;
-         //update stock
-         $items->stock = $new_stock;
-
-         $items->save();
-       
-
-        return('success');
+        // check if exist 
+        $exist = Item::where('name','=',$request->input('product_name'))->where('supplier_id',$request->input('supplier_id'))->count();
+        
+        if($exist > 0){
+            return "Item already exist!";
         }
         else{
-            return('failed');
+            $item = new Item;
+            $item->name = strtoupper($request->input('product_name'));
+            $item->stock = $request->input('stock');
+            $item->supplier_id = ($request->input('supplier')+1);
+            $item->posted_by = strtoupper($user);
+            $item->unit = strtoupper($request->input('unit'));
+            // add transaction
+
+            try{
+                $item->save();
+                return $this->add_to_transaction($item,"import item","0","0");
+            }
+            catch(Exception $e){
+                return $e->getMessage();
+            }   
         }
+     
+      
+    }
+    // add to transaction
+    public function add_to_transaction($item,$action,$add_quantity,$export_quantity){
+    
+        $trans = new Transaction;
+        // return $item;
+        $trans->unit = $item->unit;
+        $trans->item_id = $item->id;
+        $trans->action = strtoupper($action);
+        $trans->performed_by = auth()->user()->name;
+        // if import
+        if($add_quantity > 0 && $export_quantity == 0){
+            $trans->quantity = $add_quantity;
+        }
+        // if export
+        else if($add_quantity == 0 && $export_quantity > 0){
+            $trans->quantity = $export_quantity;
+        }
+        // if new item
+        else{
+            $trans->quantity = $item->stock;
+        }
+        
+        try{
+            $trans->save();
+            return "successfully added!";
+        }
+        catch(Exception $e){
+            return $e->getMessage();
+        }
+
+    }
+    public function add_stocks(Request $request){
+
+        $item = Item::findOrFail($request->input('item_id'));
+        $new_stock = ($item->stock+$request->input('import_number'));
+        $item->stock = strval($new_stock);
+
+        try{
+            $item->save();
+            // add to transaction
+            return $this->add_to_transaction($item,"add stock",$request->input('import_number'),'0');
+
+        }
+        catch(Exception $e){
+            return $e->getMessage();
+        }
+        
     }
 
     public function export(Request $request){
-         if($request->ajax()){
 
-         $item_id = $request->item_id;
-         $quantity = $request->import_number;
+        $item = Item::find($request->input('item_id'));
+        $new_stock = ($item->stock - $request->input('export_number'));
+
+        $item->stock = strval($new_stock);
+
+        try{
+            $item->save();
+            // add to transaction
+            return $this->add_to_transaction($item,"export stock",'0',$request->input('export_number'));
+        }
+        catch(Exception $e){
+            return $e->getMessage();
+        }
+
+
+
+
+        //  if($request->ajax()){
+
+        //  $item_id = $request->item_id;
+        //  $quantity = $request->import_number;
         
         
-         $items = Item::find($item_id);
-         //get current stock
-         $current = $items->stock;
-         //add current to request 
-         $new_stock = $current-$quantity;
-         //update stock
-         $items->stock = $new_stock;
+        //  $items = Item::find($item_id);
+        //  //get current stock
+        //  $current = $items->stock;
+        //  //add current to request 
+        //  $new_stock = $current-$quantity;
+        //  //update stock
+        //  $items->stock = $new_stock;
        
-         $items->save();
+        //  $items->save();
        
 
-        return('success');
-        }
-        else{
-            return('failed');
-        }
+        // return('success');
+        // }
+        // else{
+        //     return('failed');
+        // }
     }
 }

@@ -15,16 +15,22 @@
 Route::get('/', 'PagesController@index');
 Route::resource('transaction','TransactionsController');
 Route::get('/items/delete/{id}','itemsController@destroy');
-Route::resource('items','itemsController');
-Route::get('/about', 'PagesController@about');
+// Route::resource('items','itemsController');
+// Route::get('/about', 'PagesController@about');
 // ajax
-Route::post('import','itemsController@import');
-Route::post('export','itemsController@export');
+
+
 Route::post('addTrans','TransactionsController@store');
 Route::post('storeBatch','BatchTransactionsController@store');
-Route::post('store','itemsController@store');
+Route::post('add_new_item','itemsController@store');
 // add new supplier
 Route::post('add_supplier','SupplierController@store');
+// add to transaction
+Route::post('add_to_transaction','TransactionsController@store');
+// add stocks to item
+Route::post('add_stocks','itemsController@add_stocks');
+// export stocks
+Route::post('export','itemsController@export');
 
 Auth::routes();
 
