@@ -30,9 +30,9 @@ class HomeController extends Controller
     {
         $title = 'H5 Warehouse System';
         $items = Item::all();
-        $transaction = Transaction::all();
+        $transaction = Transaction::with('item')->get();
         $suppliers = Supplier::pluck('supplier_name');
-        
+
         return view('home')->with('title',$title)->with('items',$items)->with('transaction',$transaction)->with('suppliers',$suppliers);
     }
 }

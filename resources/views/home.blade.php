@@ -25,8 +25,13 @@
             <i class="mdi mdi-account-plus" style="margin-right:5px"></i>
                       Add New Supplier
                     </button>
-          <a href="/items" class="btn btn-success">
-            <i class="mdi mdi-file-table-box-multiple-outline" style="margin-right:5px"></i>Items</a>
+          <button type="button" class="btn btn-success" data-toggle="modal" data-target="#suppliers_view_modal">
+            <i class="mdi mdi-account-group"  style="margin-right:5px"></i>
+                      View Supplier
+                    </button>
+
+          <a href="/inventory" class="btn btn-success">
+            <i class="mdi mdi-file-table-box-multiple-outline" style="margin-right:5px"></i>Inventory Report</a>
         {{-- <a href="/transaction" class="btn btn-success">View Item Transactions</a> --}}
     </div>
   <!-- Button to Open the Modal -->
@@ -174,7 +179,33 @@
     </div>
   </div>
 </div>
+
+{{-- SUPPLIERS VIEW MODAL --}}
+<div class="modal fade" id="suppliers_view_modal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h4 class="modal-title">Select Supplier</h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <!-- Modal body -->
+      <div class="modal-body form-group">
+          {!!Form::open(['action'=>'PagesController@suppliers', 'method'=>'POST','id'=>'select_supplier'])!!}
+          
+            {{Form::label('title','Select Supplier')}}
+            {{Form::select('supplier',$suppliers,null,['class'=>'form-control'])}}
+            <hr>
+            {{Form::submit('View',['class'=>'btn btn-primary'])}}
+          {!!Form::close()!!}
+        
+      </div>
+      </div>
+    </div>
+  </div>
     <hr>
+
+{{-- TABLES --}}
     <div class="row">
        <div class="col-7">
        <h3>Items Data Table</h3>
@@ -188,7 +219,7 @@
                         <th>Name</th>
                         <th>Stock</th>
                         <th>Unit</th>
-                        <th>From</th>
+                        <th>Supplier</th>
                         <th>Date Inserted</th>
                         <th>Action</th>
                     </tr>
@@ -210,6 +241,8 @@
                       <i class="mdi mdi-application-export"></i>
                       Export
                     </button>
+
+
             
                           </td>
                         </tr>
@@ -239,7 +272,6 @@
                 <tbody>
                     @foreach($transaction as $trans)
                         <tr>
-                           
                             <td>{{$trans->action}}</td>
                             <td>{{$trans->item->name}}</td>
                             <td>{{$trans->quantity}}</td>

@@ -18,7 +18,7 @@ Route::get('/items/delete/{id}','itemsController@destroy');
 // Route::resource('items','itemsController');
 // Route::get('/about', 'PagesController@about');
 // ajax
-
+Route::post('/suppliers','PagesController@suppliers');
 
 Route::post('addTrans','TransactionsController@store');
 Route::post('storeBatch','BatchTransactionsController@store');
@@ -31,7 +31,8 @@ Route::post('add_to_transaction','TransactionsController@store');
 Route::post('add_stocks','itemsController@add_stocks');
 // export stocks
 Route::post('export','itemsController@export');
-
+// inventory report
+Route::get('inventory','PagesController@inventory');
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');

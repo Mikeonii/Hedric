@@ -121,6 +121,7 @@ class itemsController extends Controller
         // return $item;
         $trans->unit = $item->unit;
         $trans->item_id = $item->id;
+        $trans->supplier_id = $item->supplier_id;
         $trans->action = strtoupper($action);
         $trans->performed_by = auth()->user()->name;
         // if import
