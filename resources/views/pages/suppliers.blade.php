@@ -2,9 +2,10 @@
 
     @section('content')
     <div class="" style="margin-top: -20px; padding-left:50px; padding-right: 50px;">
-      <h1 style="color:green">{{$info[0]->supplier->supplier_name}}</h1>
-      <p>Number of Items: <strong>{{count($items)}}</strong> || Number of Transactions: <strong>{{count($transactions)}}</strong></p>
-       <a href="/home" class="btn btn-success"><i class="mdi mdi-arrow-left"></i>Back to Dashboard</a>
+      <strong><p style="font-size:80px;">{{$info[0]->supplier->supplier_name}}</p></strong> 
+      <h4>Number of Items: <strong><span style="color:grey; font-size:40px">{{count($items)}}</span></strong> | Number of Transactions: <strong><span style="color:grey; font-size:40px">{{count($transactions)}}</span></strong></h4>
+       <a href="/" class="btn btn-success"><i class="mdi mdi-arrow-left"></i>Back to Dashboard</a>
+       {{-- <a href="#" class="btn btn-warning"><i class="mdi mdi-pencil"></i>Edit</a> --}}
        <hr>
    {{--    <table id="suppliers_table" class="table-hover table table-striped">
      			<thead>
@@ -28,7 +29,7 @@
      		
      		<div class="row">
      			<div class="col">
-     				<h2 style="">Items Table</h2>
+     				<h2 style="">My Items Table</h2>
      		@if(count($info) > 0)
      		<table id="item_table" class="table-hover table table-striped">
      			<thead>
@@ -36,11 +37,11 @@
      					<th>Name</th>
      					<th>Total Import</th>
      					<th>Total Export</th>
+                        <th>Unit Price</th>
      					<th>Stock</th>
      					<th>Unit</th>
      					<th>Posted by</th>
      					<th>Created at</th>
-     					<th>Actions</th>
      				</tr>
      			</thead>
      			<tbody>
@@ -49,12 +50,11 @@
      					<td>{{$item->get('name')}}</td>     					
      					<td>{{$item->get('total_import')}}</td>
      					<td>{{$item->get('total_export')}}</td>
+                        <td>{{$item->get('unit_price')}}</td>
      					<td>{{$item->get('stock')}}</td>
      					<td>{{$item->get('unit')}}</td>
      					<td>{{$item->get('posted_by')}}</td>
      					<td>{{$item->get('created_at')}}</td>
-     					<td><a href="#" class="btn btn-success">View</a>
-     						</td>
      				</tr>
      			@endforeach
      			</tbody>
@@ -66,7 +66,7 @@
      	
      			</div>
      			<div class="col">
-     				<h2>Transactions Table</h2>
+     				<h2>My Transactions Table</h2>
      				<table class="table table-striped table-hover" id="transactions_table">
      					<thead>
      						<tr>

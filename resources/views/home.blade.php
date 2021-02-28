@@ -49,11 +49,14 @@
       <div class="modal-body form-group">
           {!!Form::open(['action'=>'itemsController@store', 'method'=>'POST','id'=>'add_new_item'])!!}
             {{Form::label('title','Product Name')}}
-            {{Form::text('product_name','',['autofocus'=>'true','class'=>'form-control'])}}
-            {{Form::label('title','Stock')}}
-            {{Form::number('stock','',['class'=>'form-control'])}}
+            {{Form::text('product_name','',['autofocus'=>'true','class'=>'form-control','placeholder'=>'E.g Colgate'])}}
+            {{Form::label('title','Unit Price')}}
+            {{Form::text('unit_price','',['class'=>'form-control','placeholder'=>'10.25'])}}
+            {{Form::label('title','Quantity')}}
+            {{Form::number('stock','',['class'=>'form-control','placeholder'=>'10'])}}
             {{Form::label('title','Unit')}}
-            {{Form::text('unit','',['class'=>'form-control'])}}
+            {{Form::text('unit','',['class'=>'form-control','placeholder'=>'E.g Carton'])}}
+           
             {{Form::text('action','Batch Import',['hidden'])}}
             {{Form::label('title','From')}}
             {{Form::select('supplier',$suppliers,null,['class'=>'form-control'])}}
@@ -219,9 +222,12 @@
                         <th>Name</th>
                         <th>Stock</th>
                         <th>Unit</th>
+                        <th>Unit Price</th>
                         <th>Supplier</th>
                         <th>Date Inserted</th>
-                        <th>Action</th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -231,19 +237,22 @@
                             <td>{{$item->name}}</td>
                             <td>{{$item->stock}}</td>
                             <td>{{$item->unit}}</td>
+                            <td>{{$item->unit_price}}</td>
                             <td>{{$item->supplier->supplier_name}}</td>
                             <td>{{$item->created_at}}</td>
                             <td>
                   <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#import"><i class="mdi mdi-application-import"></i>
                       Add
                     </button>
-                     <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#export">
+                          </td>
+                          <td>
+                                <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#export">
                       <i class="mdi mdi-application-export"></i>
                       Export
                     </button>
-
-
-            
+                    </td>
+                          <td>
+                            <a href="/item/{{$item->id}}" class="btn btn-success">View Item</a>
                           </td>
                         </tr>
                         
@@ -298,9 +307,10 @@
         $(document).ready(function(){
   
            // datatables
-           var table = $('#myTable').DataTable({"pageLength":5, "order": [[ 5, "desc" ]]});
+           var table = $('#myTable').DataTable({"pageLength":5, "order": [[ 6, "desc" ]]});
            var trans_table = $('#transactions_table').DataTable({"pageLength":3, "order": [[ 4, "desc" ]],});
-          // buttons on click
+         
+          // add supplier // buttons on click
           $('#myTable tbody').on('click','td',function(){
             var table_data = table.row(this).data();
             // get the row's info
@@ -323,7 +333,7 @@
             $('#items_id').val(id);
             $('#items_unit').val(unit);
           });
-          // add supplier
+
           $('#add_supplier').submit(function(e){
             e.preventDefault();
             // send to ajax

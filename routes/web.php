@@ -12,7 +12,7 @@
 */
 
 
-Route::get('/', 'PagesController@index');
+// Route::get('/', 'PagesController@index');
 Route::resource('transaction','TransactionsController');
 Route::get('/items/delete/{id}','itemsController@destroy');
 // Route::resource('items','itemsController');
@@ -35,5 +35,11 @@ Route::post('export','itemsController@export');
 Route::get('inventory','PagesController@inventory');
 Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/', 'HomeController@index')->name('home');
+// excel export
+Route::get('/items_export','itemsController@export_excel');
+// excel export view
+// Route::get('/excel_export','itemsController@export_excel');
+// individual item view
+Route::get('/item/{item_id}','PagesController@show_item');
 

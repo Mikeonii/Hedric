@@ -10,6 +10,6 @@ class Transaction extends Model
     	return $this->belongsTo('App\Item');
     }
     public function supplier(){
-    	return $this->belongsTo('App\Item');
+    	return $this->belongsTo('App\Item'); 
     }
 }

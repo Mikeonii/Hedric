@@ -7,6 +7,9 @@ use App\Item;
 use App\Transaction;
 use DB;
 use Exception;
+use App\Exports\ItemsExport;
+use Maatwebsite\Excel\Facades\Excel;
+
 class itemsController extends Controller
 {
     /**
@@ -46,7 +49,7 @@ class itemsController extends Controller
      */
     public function show($id)
     {
-        //
+        
     }
 
     /**
@@ -97,6 +100,7 @@ class itemsController extends Controller
         else{
             $item = new Item;
             $item->name = strtoupper($request->input('product_name'));
+            $item->unit_price = $request->input('unit_price');
             $item->stock = $request->input('stock');
             $item->supplier_id = ($request->input('supplier')+1);
             $item->posted_by = strtoupper($user);
@@ -179,31 +183,14 @@ class itemsController extends Controller
         catch(Exception $e){
             return $e->getMessage();
         }
+    }
+    // export excel file
+    public function export_excel(){
 
+        $items = Item::all();
+        // return Excel::download(new ItemsExport,'items.xlsx');
+        // return view('pages.export')->with('items',$items);
+        return Excel::download(new ItemsExport($items),'items.xlsx');
 
-
-
-        //  if($request->ajax()){
-
-        //  $item_id = $request->item_id;
-        //  $quantity = $request->import_number;
-        
-        
-        //  $items = Item::find($item_id);
-        //  //get current stock
-        //  $current = $items->stock;
-        //  //add current to request 
-        //  $new_stock = $current-$quantity;
-        //  //update stock
-        //  $items->stock = $new_stock;
-       
-        //  $items->save();
-       
-
-        // return('success');
-        // }
-        // else{
-        //     return('failed');
-        // }
     }
 }

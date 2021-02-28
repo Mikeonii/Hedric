@@ -18,6 +18,12 @@ class CreateItemsTable extends Migration
             $table->string('name');
             $table->integer('stock');
             $table->integer('supplier_id');
+            $table->string('address')->default('Cantilan, SDS');
+            $table->string('code')->default('CO');
+            $table->string('remarks')->default('supplier');
+            $table->string('inventory_evaluation_method')->default('FIFO');
+            $table->string('total_weight_volume')->default('N/A');
+            $table->float('unit_price');
             $table->string('unit');
             $table->string('posted_by');
             $table->timestamps();

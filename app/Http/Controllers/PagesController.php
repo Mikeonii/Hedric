@@ -15,8 +15,35 @@ class PagesController extends Controller
     }
     public function inventory(){
     	$items = Item::all();
+
+    	$items  = $items->map(function($item){
+    		
+    		$total_import = Transaction::select('quantity')->whereHas('item',function($q) use($item){
+    		$q->where('action','!=','EXPORT STOCK')
+    		->where('item_id',$item->id);
+	    	})->sum('quantity');
+
+	    	$total_export = Transaction::select('quantity')->whereHas('item',function($q) use($item){
+	    	$q->where('action','EXPORT STOCK')
+	    	->where('item_id',$item->id);
+	    	})->sum('quantity');
+
+	    	return collect([
+	    		'id'=>$item->id,
+	    		'name'=>$item->name,
+	    		'supplier_name'=>$item->supplier->supplier_name,
+	    		'total_import'=>$total_import,
+	    		'total_export'=>$total_export,
+	    		'stock'=>$item->stock,
+	    		'created_at'=>$item->created_at,
+	    		'posted_by'=>$item->posted_by,
+	    		'unit'=>$item->unit,
+	    		'unit_price'=>$item->unit_price]);
+    	});
+    	// return $items;
     	return view('pages.inventory')->with('items',$items);
     }
+
     public function index(){
     
     	return view('pages.index');
@@ -33,17 +60,28 @@ class PagesController extends Controller
   
     	$items = $items->map(function($item) use($supplier){
 
-    		$total_import = Transaction::whereHas('item',function($q) use ($supplier){
+    		$total_import = Transaction::whereHas('item',function($q) use ($supplier,$item){
     		$q->where('supplier_id',$supplier->id)
+    		->where('item_id',$item->id)
     		->where('action','!=','EXPORT STOCK');
-	    	})->count();
+	    	})->sum('quantity');
 
-	    	$total_export = Transaction::whereHas('item',function($q) use ($supplier){
+	    	$total_export = Transaction::whereHas('item',function($q) use ($supplier,$item){
 	    		$q->where('supplier_id',$supplier->id)
+	    		->where('item_id',$item->id)
 	    		->where('action','EXPORT STOCK');
-	    	})->count();
+	    	})->sum('quantity');
 
-	    	return collect(['name'=>$item->name,'total_import'=>$total_import,'total_export'=>$total_export,'stock'=>$item->stock,'created_at'=>$item->created_at,'posted_by'=>$item->posted_by,'unit'=>$item->unit]); 
+	    	return collect([
+	    		'name'=>$item->name,
+	    		'total_import'=>$total_import,
+	    		'total_export'=>$total_export,
+	    		'stock'=>$item->stock,
+	    		'created_at'=>$item->created_at,
+	    		'posted_by'=>$item->posted_by,
+	    		'unit'=>$item->unit,
+	    		'unit_price'=>$item->unit_price
+	    	]); 
 
     	});
 
@@ -53,5 +91,10 @@ class PagesController extends Controller
     
     	
 		return view('pages.suppliers')->with('info',$info)->with('items',$items)->with('transactions',$transactions);
+    }
+    public function show_item($id){
+        $item = Item::findOrFail($id);
+        $transactions = Transaction::where('item_id', $id)->get();
+        return view('pages.item')->with('item',$item)->with('transactions',$transactions);
     }
 }
