@@ -193,4 +193,7 @@ class itemsController extends Controller
         return Excel::download(new ItemsExport($items),'items.xlsx');
 
     }
+    public function view_items(){
+        return Item::latest()->get();
+    }
 }
