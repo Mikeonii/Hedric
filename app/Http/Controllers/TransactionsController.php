@@ -101,4 +101,7 @@ class TransactionsController extends Controller
       
        
     }
+    public function view_transactions(){
+        return Transaction::orderBy('created_at','desc')->with('item')->limit('50')->latest()->get();
+    }
 }

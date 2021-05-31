@@ -35,7 +35,10 @@ Route::post('export','itemsController@export');
 Route::get('inventory','PagesController@inventory');
 Auth::routes();
 
-Route::get('/', 'HomeController@index')->name('home');
+Route::get('/', 'HomeController@index')->name('index');
+Route::get('/items', 'itemsController@view_items')->name('view_items');
+Route::get('/transactions', 'TransactionsController@view_transactions')->name('view_transactions');
+
 // excel export
 Route::get('/items_export','itemsController@export_excel');
 // excel export view

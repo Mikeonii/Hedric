@@ -209,6 +209,7 @@
     <hr>
 
 {{-- TABLES --}}
+   
     <div class="row">
        <div class="col-7">
        <h3>Items Data Table</h3>
@@ -217,47 +218,34 @@
             <table id="myTable" class="table-hover table table-striped">
                 <thead>
                     <tr>
-                        <th hidden>ID</th>
+                        <th>ID</th>
 
                         <th>Name</th>
                         <th>Stock</th>
                         <th>Unit</th>
                         <th>Unit Price</th>
-                        <th>Supplier</th>
                         <th>Date Inserted</th>
                         <th></th>
                         <th></th>
                         <th></th>
+                      
                     </tr>
                 </thead>
-                <tbody>
-                    @foreach($items as $item)
-                        <tr>
-                            <td hidden>{{$item->id}}</td>
-                            <td>{{$item->name}}</td>
-                            <td>{{$item->stock}}</td>
-                            <td>{{$item->unit}}</td>
-                            <td>{{$item->unit_price}}</td>
-                            <td>{{$item->supplier->supplier_name}}</td>
-                            <td>{{$item->created_at}}</td>
-                            <td>
-                  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#import"><i class="mdi mdi-application-import"></i>
-                      Add
-                    </button>
-                          </td>
-                          <td>
-                                <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#export">
-                      <i class="mdi mdi-application-export"></i>
-                      Export
-                    </button>
-                    </td>
-                          <td>
-                            <a href="/item/{{$item->id}}" class="btn btn-success">View Item</a>
-                          </td>
-                        </tr>
-                        
-                    @endforeach
-                </tbody>
+                <tfoot>
+                   <tr>
+                        <th>ID</th>
+
+                        <th>Name</th>
+                        <th>Stock</th>
+                        <th>Unit</th>
+                        <th>Unit Price</th>
+                        <th>Date Inserted</th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                      
+                    </tr>
+                </tfoot> 
             </table>
         
         @else
@@ -266,6 +254,7 @@
         </div>
         <div class="col">
             <h3>Transactions History Table</h3>
+
             @if(count($transaction) > 0)
         
             <table id="transactions_table" class="table-hover table table-striped">
@@ -278,24 +267,20 @@
                         <th>Performed Date</th>
                     </tr>
                 </thead>
-                <tbody>
-                    @foreach($transaction as $trans)
-                        <tr>
-                            <td>{{$trans->action}}</td>
-                            <td>{{$trans->item->name}}</td>
-                            <td>{{$trans->quantity}}</td>
-                            <td>{{$trans->unit}}</td>
-                            <td>{{$trans->created_at}}</td>
-                            
-                        </tr>
-                        
-                    @endforeach
-                </tbody>
+                <tfoot>
+                    <tr>
+                        <th>Action</th>
+                        <th>Product Name</th>
+                        <th>Quantity</th>
+                        <th>Unit</th>
+                        <th>Performed Date</th>
+                    </tr>
+                </tfoot>
             </table>
              @else
                 <h3>No items found</h3>
         @endif
-        
+         <p>Note: This table only shows 50 latest results. To all the transactions from each item, click the "View Item" button inside the Items Data Table.</p>
         </div>
     </div>
     {{-- datatables --}}
@@ -307,17 +292,116 @@
         $(document).ready(function(){
   
            // datatables
-           var table = $('#myTable').DataTable({"pageLength":5, "order": [[ 6, "desc" ]]});
-           var trans_table = $('#transactions_table').DataTable({"pageLength":3, "order": [[ 4, "desc" ]],});
+           // var table = $('#myTable').DataTable({"pageLength":5,  "order": [[ 6, "desc" ]], "processing":true,});
          
+           // var trans_table = $('#transactions_table').DataTable({"pageLength":5, "order": [[ 4, "desc" ]],
+           //  "processing":true,
+           //  "deferRender":true});
+
+           var trans_table = $('#transactions_table').DataTable({
+            // "processing":true,
+            "order": [[ 4, "desc" ]],
+            "pageLength":8,
+            "deferRender":true,
+            "ajax":{
+              url:"{{route('view_transactions')}}",dataSrc:""
+            },            
+            "columns":[
+              {
+                data:"action",
+                name:"Action",
+              },
+             
+              {
+                data:"item.name",
+                name:"Product Name",
+              },
+              {
+                data:"quantity",
+                name:"Quantity",
+              },
+               {
+                data:"unit",
+                name:"Unit",
+              },
+               {
+                data:"created_at",
+                name:"Performed Date",
+              }
+                ],
+           
+            });
+    
+
+            var table = $('#myTable').DataTable({
+            // "processing":true,
+            "pageLength":8,
+            "deferRender":true,
+            "ajax":{
+              url:"{{route('view_items')}}",dataSrc:""
+            },            
+            "columns":[
+            {
+                data:"id",
+                name:"ID",
+              },
+             
+              {
+                data:"name",
+                name:"Name",
+              },
+              {
+                data:"stock",
+                name:"Stock",
+              },
+               {
+                data:"unit",
+                name:"Unit",
+              },
+               {
+                data:"unit_price",
+                name:"Unit Price",
+              },
+              
+              {
+                data:"created_at",
+                name:"Date Inserted",
+              },
+              {
+                data:null,
+                render:function(data,type,row){
+              return"<button type='button' class='btn btn-primary' data-toggle='modal' data-target='#import'><i class='mdi mdi-application-import'></i>Add</button>";
+                }
+              },
+              {
+                data:null,
+                render:function(data,type,row){
+              return"<button type='button' class='btn btn-secondary' data-toggle='modal' data-target='#export'><i class='mdi mdi-application-export'></i> Export </button>";
+                }
+              },
+              {
+                data:null,
+                render:function(data,type,row){
+              return"<a href='/item/"+data.id+"' class='btn btn-success'>View Item</a>";
+                }
+              },
+             
+            ],
+           
+            });
+//                   setInterval( function () {
+//     table.ajax.reload();
+// }, 3000 ); 
           // add supplier // buttons on click
           $('#myTable tbody').on('click','td',function(){
             var table_data = table.row(this).data();
+            // console.log(table_data);
             // get the row's info
-            var id = table_data[0];
-            var name = table_data[1];
-            var stock = table_data[2]
-            var unit = table_data[3];
+            var id = table_data.id;
+            var name = table_data.name;
+            var stock = table_data.stock;
+            var unit = table_data.unit;
+            
             //insert into form
             $('#import_id').text(id);
             $('#import_name').text(name);
@@ -332,6 +416,7 @@
             $('#export_unit').text(unit);
             $('#items_id').val(id);
             $('#items_unit').val(unit);
+
           });
 
           $('#add_supplier').submit(function(e){
@@ -342,7 +427,6 @@
               url:'{{URL::to('add_supplier')}}',
               data: $(this).serialize(),success:function(response){
                 alert(response);
-                location.reload();
               }
             })
           })
@@ -357,7 +441,7 @@
                 data: $(this).serialize(),
                 success: function(response){
                     alert(response);
-                    location.reload();
+                    trans_table.ajax.reload();
                 }
             });
          });
@@ -372,7 +456,8 @@
           url: '{{URL::to('add_stocks')}}',
           data: $(this).serialize(),success:function(data){
             alert(data);
-            location.reload();
+            table.ajax.reload();
+             trans_table.ajax.reload();
             },
          });
           
@@ -389,7 +474,7 @@
             url: '{{URL::to('export')}}',
             data: $(this).serialize(),success:function(data){
               alert(data);
-              location.reload();
+               trans_table.ajax.reload();
             },
            });
          });

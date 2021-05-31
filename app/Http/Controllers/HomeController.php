@@ -35,4 +35,15 @@ class HomeController extends Controller
 
         return view('home')->with('title',$title)->with('items',$items)->with('transaction',$transaction)->with('suppliers',$suppliers);
     }
+    public function crud(){
+     
+        // if(request()->ajax()){
+            
+        //     return Item::latest()->get();
+        // }
+        return view('sample');
+    }
+    // public function view_items(){
+    //     return Transaction::latest()->get();
+    // }
 }
